@@ -302,7 +302,8 @@ SynthDef(\InfEfx, {
 	var lfo, pitchenv, output, randomlfo, multiPitch, lfoAmp;
 	//
 	FreeSelf.kr(gate);
-	lfo = Osc.ar(lfo_wave,lfo_speed, lfo_phase, 0.5 * lfoGet2, 0.5 * lfoGet2) + LFNoise0.ar(lfo_speed, 0.5 * lfoGet1, 0.5 * lfoGet1);
+	lfo = Osc.ar(lfo_wave, lfo_speed, lfo_phase, 0.5 * lfoGet2, 0.5 * lfoGet2);
+	lfo = lfo + LFNoise0.ar(lfo_speed, 0.5 * lfoGet1, 0.5 * lfoGet1);
 	lfo = lfo * EnvGen.ar(Env.asr(lfo_delay,releaseTime:0.01, curve: -5),envTrig);
 	multiPitch = LinLin.ar(lfo, 0, 1, (pitchCons.neg.midiratio * tameM) + tameC, pitchCons.midiratio);
 	lfoAmp = LinLin.ar(lfo, 0, 1, lfo_amd * (-3/4), 0);
@@ -344,7 +345,7 @@ SynthDef(\DX7, {
 	//below is the general,
 	osc_sync, transpose,
 	gate1=1, gate1Rel = 1, amp=0.1, totVol;
-	var ctls, mods, chans, out, kilnod,
+	var ctls, mods, chans, out,
 	envAmp1, envEnv1, envAmp2, envEnv2, envAmp3, envEnv3 ,envAmp4, envEnv4, envAmp5, envEnv5, envAmp6, envEnv6, dca, envAmpP, envEnvP;
 	//
 	envEnvP = Env.new([ envPL0, envPL1, envPL2, envPL3, envPL4], [envPR0,envPR1,envPR2,envPR3], 0, 3);
@@ -389,7 +390,6 @@ SynthDef(\DX7, {
 		(out[5] * 1 * dn41),
 	]);
 	FreeSelfWhenDone.kr(Line.kr(0, 1, 10));
-	kilnod = DetectSilence.ar(out, 0.01, 0.2, doneAction:2);
 	//out = out * Lag2.ar(In.ar(busMe),0.01);
 	//Out.ar([0,1], 0.5 * In.ar(busMe)); //deneme
 	out = out / outMult;
